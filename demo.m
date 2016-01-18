@@ -14,7 +14,7 @@ info = load('images/filelist.mat');
 datasets = {'demo'};
 train_lists = {info.train_list};
 test_lists = {info.test_list};
-feature = 'color';
+feature = 'hog3x3';
 
 % Load the configuration and set dictionary size to 20 (for fast demo)
 c = conf();
@@ -80,7 +80,7 @@ end
 
 %
 % Sample code for usage of features with Liblinear SVM classifier:
-%   svm_options = '-s 2 -B 1 -c 1 -q';
-%   model = train(train_labels, sparse(double(train_features)), svm_options);
-%   predicted_labels = predict(test_labels, sparse(double(test_features)), model);
+   svm_options = '-s 2 -B 1 -c 1 -q';
+   model = train(train_labels', sparse(double(train_features)), svm_options);
+   predicted_labels = predict(test_labels', sparse(double(test_features)), model);
 %
