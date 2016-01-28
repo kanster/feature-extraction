@@ -6,19 +6,24 @@
 %   Memorability of Image Regions
 %   Advances in Neural Information Processing Systems (NIPS) 2012
 %
-
+clear;
 addpath(genpath(pwd));
 
+% generate train/test labels/list from given dataset
+n_test_images = 10;
+info = generate_info('images/natural_valley_small/', n_test_images);
+
+
 % Initialize variables for calling datasets_feature function
-info = load('images/filelist.mat');
-datasets = {'demo'};
+% info = load('images/filelist.mat');
+datasets = {'natural_valley_small'};
 train_lists = {info.train_list};
 test_lists = {info.test_list};
-feature = 'hog3x3';
+feature = 'sift';
 
 % Load the configuration and set dictionary size to 20 (for fast demo)
 c = conf();
-c.feature_config.(feature).dictionary_size=20;
+c.feature_config.(feature).dictionary_size=30;
 
 % Compute train and test features
 datasets_feature(datasets, train_lists, test_lists, feature, c);
@@ -41,6 +46,7 @@ test_features = load_feature(datasets{1}, feature, 'test', c);
 %
 
 % Display train images in Figure 1
+%{
 train_labels = info.train_labels; classes = info.classes;
 unique_labels = unique(train_labels);
 numPerClass = max(histc(train_labels, unique_labels));
@@ -77,10 +83,12 @@ for i=1:length(unique_labels)
         imshow(im); title(sprintf('Nearest neighbor, predicted class: %s', classes{train_labels(nn_idx(idx(j)))}));
     end
 end
-
+%}
 %
 % Sample code for usage of features with Liblinear SVM classifier:
-   svm_options = '-s 2 -B 1 -c 1 -q';
-   model = train(train_labels', sparse(double(train_features)), svm_options);
-   predicted_labels = predict(test_labels', sparse(double(test_features)), model);
+train_labels = info.train_labels; 
+test_labels = info.test_labels;
+svm_options = '-s 2 -B 1 -c 1 -q';
+model = train(train_labels', sparse(double(train_features)), svm_options);
+predicted_labels = predict(test_labels', sparse(double(test_features)), model);
 %

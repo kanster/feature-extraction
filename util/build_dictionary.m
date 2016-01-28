@@ -45,6 +45,7 @@ while(found_dictionary == 0)
     descriptors = cell(min(length(filelist), p.num_images), 1);
     num_images = min(length(filelist), p.num_images);
     parfor i=1:num_images
+    % for i = 1:num_images
       vprintf(c.verbosity, 1, 'Dictionary learning (%s): %d of %d\n', feature, i, num_images);
       img = imgread(filelist{perm(i)}, p);
       feat = extract_feature(feature, img, c);
